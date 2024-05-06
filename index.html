@@ -1,148 +1,2152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<style type="text/css">
-.inline {
-  background-color: #f7f7f7;
-  border:solid 1px #B0B0B0;
-}
-.error {
-	font-weight: bold;
-	color: #FF0000;
-}
-.warning {
-	font-weight: bold;
-}
-.message {
-	font-style: italic;
-}
-.source, .output, .warning, .error, .message {
-	padding: 0 1em;
-  border:solid 1px #F7F7F7;
-}
-.source {
-  background-color: #f5f5f5;
-}
-.left {
-  text-align: left;
-}
-.right {
-  text-align: right;
-}
-.center {
-  text-align: center;
-}
-.hl.num {
-  color: #AF0F91;
-}
-.hl.str {
-  color: #317ECC;
-}
-.hl.com {
-  color: #AD95AF;
-  font-style: italic;
-}
-.hl.opt {
-  color: #000000;
-}
-.hl.std {
-  color: #585858;
-}
-.hl.kwa {
-  color: #295F94;
-  font-weight: bold;
-}
-.hl.kwb {
-  color: #B05A65;
-}
-.hl.kwc {
-  color: #55aa55;
-}
-.hl.kwd {
-  color: #BC5A65;
-  font-weight: bold;
-}
-</style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AllergEat - About Us</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5e9e2; 
-        }
-        .header {
-            background-color: #f5e9e2;
-            padding: 20px;
-            text-align: center;
-        }
-        .nav-bar {
-            background-color: #d3c1b8;
-            padding: 10px;
-            text-align: center;
-        }
-        .nav-bar a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: #5d483d;
-            font-weight: bold;
-        }
-        .content {
-            padding: 20px;
-        }
-        .video-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        
-    .header h1 {
-    display: inline-block;
-    padding: 20px 30px;
-    background-color: #9c7f6b;
-    color: white;
-    border-radius: 5px;
-    font-size: 36px; 
+---
+title: "Evolución del Personal Administrativo y Servicios (PTGAS) al servicio de la UCM"
+author: "Observatorio de la Unidad de Igualdad (UCM)"
+output: 
+  html_document: 
+    theme: cerulean
+    highlight: tango
+    number_sections: no
+    toc: yes
+    toc_depth: 1
+    toc_float: yes
+  pdf_document:
+    css: my-theme.css
+    theme: cerulean
+    highlight: tango
+    number_sections: yes
+    toc: yes
+    toc_depth: 1
+editor_options:
+  chunk_output_type: console
+---
     
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>AllergEat</h1>
-        <h3>"Where Every Meal Fits Your Needs"</h3>
-    </div>
-    <div class="nav-bar">
-        <a href="Home.html">Home</a>
-        <a href="about-us.html">About Us</a>
-        <a href="restaurant-finder.html">Restaurant Finder</a>
-        <a href="blog.html">Blog</a>
-        <a href="contact-us.html">Contact</a>
-        <a href="faq.html">FAQ</a>
-    </div>
-    <div class="content">
-        <h2>About Us</h2>
-        <p>AllergEat is an initiative dedicated to improving the lives of people with food allergies, intolerances, and dietary restrictions. Our mission is to facilitate the search for restaurants offering safe and delicious options for everyone.</p>
-        <p>We understand the challenges faced by people with dietary restrictions and strive to create an inclusive community where everyone can enjoy the experience of eating out without worries.</p>
-        
-        <h3>Imagine all these restaurants in the palm of your hand</h3>
-        <div class="video-container">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/9r5TGGnMdFk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class="content">
-    
-    <h3>User Testimonials</h3>
-    <iframe src="testimonial.html" width="100%" height="300px" style="border:none;"></iframe>
-    
-</div>
-        <h3>Our Team</h3>
-        <p>Our team is made up of professionals passionate about technology, nutrition, and hospitality, committed to creating an accessible and easy-to-use platform for everyone.</p>
-        <img src="nosotros.jfif" alt="AllergEat Team" style="max-width: 80%; height: auto; display: block; margin: 0 auto;">
+```{r global_options, include=T, echo = F}
+knitr::opts_chunk$set(echo = T, warning=FALSE, message=FALSE)
+```
 
-        <h4>Contact Us</h4>
-        <p>Do you have questions or suggestions? Do not hesitate to <a href="contact-us.html">contact us</a>. We are here to help you!</p>
-    </div>
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+library(plotly)
+library(tidyverse)
+library(sjPlot)  # para tablas 
+library(stargazer) # para tablas
+library(kableExtra) # para tablas
+library(DT) # para tablas
+library(wesanderson) # paleta de colores
+library(scales)
+library(webshot)
+library(patchwork) # para unir graficos
+library(ggridges)
+library(gt) # para mejorar las tablas
+library(writexl) # para guardar en Excel las tablas
+
+
+#Defino AÑO Objetivo
+ANOFIN <- 2023
+
+
+calcmoda <- function(variable,palotes=100){
+  bb=density(variable,n = palotes,) 
+  moda=bb$x[which.max(bb$y)]
+  return(moda)
+}
+
+
+# 1_ Fuente de Datos: SIDI y Servicio del personal docente ----
+load(file="PERSONAL_TOT_Sin repetidos_anonimo.RData")
+
+
+# ------------------------------------------------------------------------------
+####CREO el CUERPO_PTGAS y el Grupo_PTGAS
+# ------------------------------------------------------------------------------
+PERSONAL_TOTR <- PERSONAL_TOTR %>%
+  mutate(Cuerpo_PTGAS=NA) %>% 
+  mutate(Cuerpo_PTGAS=ifelse(Colectivo.SIDI=="PAS" & Grupo=="PAS Funcionario", 
+                           Grupo.de.Titulación, Cuerpo_PTGAS)) %>% 
+  mutate(Cuerpo_PTGAS=ifelse(Colectivo.SIDI=="PAS" & Grupo=="PAS Laboral", 
+                           Nivel.Salarial, Cuerpo_PTGAS)) 
+PERSONAL_TOTR <- PERSONAL_TOTR %>%
+  mutate(Nivel_PTGAS=Grado) %>% 
+  mutate(Nivel_PTGAS=ifelse(Nivel_PTGAS=="DESCONOCIDO", NA, Nivel_PTGAS))
+PERSONAL_TOTR <- PERSONAL_TOTR %>%
+  mutate(Grupo_PTGAS=NA) %>% 
+  mutate(Grupo_PTGAS=ifelse(Colectivo.SIDI=="PAS" & Grupo=="PAS Funcionario" & Tipo.Empleado.SIDI== "Funcionario", 
+                           "Funcionario de Carrera", Grupo_PTGAS)) %>% 
+  mutate(Grupo_PTGAS=ifelse(Colectivo.SIDI=="PAS" & Grupo=="PAS Funcionario" & Tipo.Empleado.SIDI== "Contratado no permanente", 
+                          "Funcionario no permanente", Grupo_PTGAS)) %>% 
+  mutate(Grupo_PTGAS=ifelse(Colectivo.SIDI=="PAS" & Grupo=="PAS Laboral" & Tipo.Empleado.SIDI== "Contratado permanente", 
+                          "Laboral permanente", Grupo_PTGAS)) %>%
+  mutate(Grupo_PTGAS=ifelse(Colectivo.SIDI=="PAS" & Grupo=="PAS Laboral" & Tipo.Empleado.SIDI== "Contratado no permanente", 
+                          "Laboral no permanente", Grupo_PTGAS)) %>% 
+  mutate(Facultad.SIDI=ifelse(Facultad.SIDI=="E. U. ESTADISTICA","F. ESTUDIOS ESTADISTICOS",Facultad.SIDI)) %>%
+  mutate(Facultad.SIDI=ifelse(Facultad.SIDI=="E. U. OPTICA","F. OPTICA Y OPTOMETRIA",Facultad.SIDI)) %>%
+  mutate(Facultad.SIDI=ifelse(Facultad.SIDI=="E. U. ENFERMERIA, FISIOT. Y PODOLOGIA","F. ENFERMERIA, FISIOTERAPIA Y PODOLOGIA",Facultad.SIDI)) %>%
+  mutate(Facultad.SIDI=ifelse(Facultad.SIDI=="E. U. ESTUDIOS EMPRESARIALES","F. CIENCIAS ECONOMICAS Y EMPRESARIALES",Facultad.SIDI)) %>%
+  mutate(Facultad.SIDI=ifelse(Facultad.SIDI=="E. U. TRABAJO SOCIAL","F. TRABAJO SOCIAL",Facultad.SIDI))
+
+# Quitamos todo lo anterior al año 2009, porque algo raro paso en esos años
+PERSONAL_TOTR <- PERSONAL_TOTR %>%
+  filter(Ano >= 2009)
+```
+
+<br>
+
+# 1. EVOLUCIÓN DEL PERSONAL PTGAS AL SERVICIO DE LA UCM 
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+TPTGAS1 <- PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  #filter(Ano<2022) %>% 
+  group_by(Ano,Sexo) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>% 
+  ungroup()
+
+img <- "https://www.ucm.es/unidaddeigualdad/file/logo-observatorio-pq2ok?ver=n"
+EVOLUCION_PTGAS <- TPTGAS1 %>% pivot_wider(names_from = Sexo, values_from = c(N,Participacion))%>%
+  gt(auto_align = FALSE) %>%
+  tab_header(
+    title = md(paste("**Tabla 1: Evolución del PTGAS de la UCM según SEXO (2009-", ANOFIN, ")**")),
+    subtitle = html(
+      web_image(
+        url = img,
+        height = px(50)
+      ))
+    ) %>%
+  tab_spanner(
+    label = md("**Personas**"),
+    columns = c(
+      TOTAL_PERSONAS, N_Hombre, N_Mujer
+    )
+  ) %>%
+  tab_spanner(
+    label = md("**Participación %**"),
+    columns = c(
+      Participacion_Hombre, Participacion_Mujer
+    )
+  ) %>%
+  cols_label(
+    Ano = md("**Año**"),
+    TOTAL_PERSONAS = md("**Total**"),
+    N_Hombre = md("**Hombre**"), 
+    N_Mujer = md("**Mujer**"),
+    Participacion_Hombre = md("**Hombre**"),
+    Participacion_Mujer = md("**Mujer**")
+  )   %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(N_Hombre), 
+      rows = N_Hombre < N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(N_Hombre), 
+      rows = N_Hombre >= N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(N_Mujer), 
+      rows = N_Hombre > N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(N_Mujer), 
+      rows = N_Hombre <= N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Participacion_Hombre), 
+      rows = Participacion_Hombre < Participacion_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Participacion_Hombre), 
+      rows = Participacion_Hombre >= Participacion_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Participacion_Mujer), 
+      rows = Participacion_Hombre > Participacion_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Participacion_Mujer), 
+      rows = Participacion_Hombre <= Participacion_Mujer # Modificar este numero
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = Ano) 
+  ) %>%
+  tab_footnote(
+    footnote = "El color verde indica el Sexo con mayor frecuencia o porcentaje",
+    locations = cells_column_labels(columns = everything())
+  ) %>%
+  tab_footnote(
+    footnote = "El color rojo indica el Sexo con menor frecuencia o porcentaje",
+    locations = cells_column_labels(columns = everything())
+  )
+EVOLUCION_PTGAS
+
+#gtsave(EVOLUCION_PTGAS, file = "Tablas/1_TABLA_EVOLUCION_PTGAS_2024.html") #html
+#write_xlsx(as.data.frame(EVOLUCION_PTGAS), path = "Tablas/1_TABLA_EVOLUCION_PTGAS_2024.xlsx") #xlsx
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Gráfico
+gPTGAS0 <- TPTGAS1 %>%
+  distinct(Ano,TOTAL_PERSONAS) %>%
+  ggplot(aes(y=TOTAL_PERSONAS,x=Ano))+
+  geom_line(lwd=1.5, col="Darkorchid4")+
+  geom_point(size=3.5, col="Darkorchid4")+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+gPTGAS0 <- gPTGAS0 +
+  labs( title=paste("Gráfico 1: Evolución del PTGAS de la UCM (2009-", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="Número de Personas",
+        caption = "Número de personas distintas \n Fuente SIDI, Centro Inteligencia Institucional de la UCM")
+gPTGAS0
+
+#ggsave(plot=gPTGAS0, file="1_FIGURA_EVOLUCION_PTGAS_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# grafico sexo
+gPTGAS1 <- TPTGAS1 %>%
+  ggplot(aes(y=N,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line(lwd=1.5)+
+  geom_point(size=2.5)+
+  scale_fill_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  #  geom_hline(yintercept = 50, col="Darkorchid4")+
+  #  geom_hline(yintercept = 40, col="Darkorchid1",lty=3)+
+  #  geom_hline(yintercept = 60, col="Darkorchid1",lty=3)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+gPTGAS1 <- gPTGAS1 +
+  labs( title=paste("Gráfico 3: Evolución del PTGAS de la UCM según SEXO (2009-", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="Personas",
+        caption = "Número de personas distintas \n Fuente SIDI, Centro Inteligencia Institucional de la UCM")
+gPTGAS1
+
+#ggsave(plot=gPTGAS1, file="1_FIGURA_EVOLUCION_PTGAS_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Grafico participacion
+gPTGAS2 <- PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>% 
+  group_by(Ano,Sexo) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(Participacion=(N/sum(N, na.rm=TRUE))*100) %>% 
+  ungroup() %>%
+  ggplot(aes(y=as.numeric(Participacion),x=Ano,color=Sexo,fill=Sexo))+
+  geom_line(lwd=1.5)+
+  geom_point(size=2.5)+
+  ylim(36,65)+
+  scale_fill_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  geom_hline(yintercept = 50, col="Darkorchid4")+
+  geom_hline(yintercept = 40, col="Darkorchid1",lty=3)+
+  geom_hline(yintercept = 60, col="Darkorchid1",lty=3)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+gPTGAS2 <- gPTGAS2 +
+  labs( title=paste("Gráfico 3: Evolución de la Participación del PTGAS de la UCM según SEXO (2009-", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+
+gPTGAS2
+
+#ggsave(plot=gPTGAS2, file="1_FIGURA_EVOLUCION_PTGAS_PARTICIPACION_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+# 2. EVOLUCIÓN DEL PERSONAL TOTAL AL SERVICIO DE LA UCM POR EDAD MEDIA
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+T3 <- PERSONAL_TOTR%>% 
+  filter(Colectivo.SIDI=="PAS") %>%  
+  group_by(Ano) %>% 
+  summarise(Edad=mean(Detalle.Edad,na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  mutate(Sexo="Ambos Sexos")
+T3.2 <- PERSONAL_TOTR%>% 
+  filter(Colectivo.SIDI=="PAS") %>% 
+  group_by(Ano,Sexo) %>% 
+  summarise(Edad=mean(Detalle.Edad,na.rm=TRUE)) %>% 
+  ungroup()
+T3<-rbind.data.frame(T3,T3.2)
+
+# Grafico evolucion
+gPTGASEDAD <- T3  %>%
+  #filter(Ano<2022) %>% 
+  ggplot(aes(y=Edad,x=Ano, col=Sexo))+
+  geom_line(lwd=1.5)+
+  geom_point(size=3.5)+
+  scale_fill_manual(values=c( "#A2A475","#D8B70A", "#02401B"))+
+  scale_color_manual(values=c( "#A2A475","#D8B70A", "#02401B"))+
+  ylim(45,53)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+gPTGASEDAD <- gPTGASEDAD +
+  labs( title=paste("Gráfico 4: Evolución de la EDAD MEDIA del PTGAS de la UCM según SEXO (2009-", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="Edad media",
+        caption = "Edead media calculada sobre número de personas distintas \n Fuente SIDI, Centro Inteligencia Institucional de la UCM")
+gPTGASEDAD
+
+#ggsave(plot=gPTGASEDAD, file="2_FIGURA_EVOLUCION_PTGAS_EDAD_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Edad media y modal ANOFIN
+T3 <- PERSONAL_TOTR%>% 
+  filter(Colectivo.SIDI=="PAS") %>%  
+  filter(Ano==ANOFIN) %>% 
+  group_by(Ano) %>% 
+  summarise(Edad=mean(Detalle.Edad,na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  mutate(Sexo="Ambos Sexos")
+T3.2 <- PERSONAL_TOTR%>% 
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Ano==ANOFIN) %>% 
+  group_by(Ano,Sexo) %>% 
+  summarise(Edad=mean(Detalle.Edad,na.rm=TRUE)) %>% 
+  ungroup()
+T3<-rbind.data.frame(T3,T3.2)
+
+aa<-PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Ano==ANOFIN) %>%
+  select(Detalle.Edad) 
+bb<-density(aa$Detalle.Edad,n = 100)
+modaT=bb$x[which.max(bb$y)]
+aa<-PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Ano==ANOFIN) %>%
+  filter(Sexo=='Hombre') %>% 
+  select(Detalle.Edad) 
+bb<-density(aa$Detalle.Edad,n = 100)
+modaH=bb$x[which.max(bb$y)]
+aa<-PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Ano==ANOFIN) %>%
+  filter(Sexo=='Mujer') %>% 
+  select(Detalle.Edad) 
+bb<-density(aa$Detalle.Edad,n = 100)
+modaM=bb$x[which.max(bb$y)]
+T3$Moda<-c(modaT,modaH,modaM)
+T3<-data.frame(T3$Ano,T3$Sexo,T3$Edad,T3$Moda)
+
+img <- "https://www.ucm.es/unidaddeigualdad/file/logo-observatorio-pq2ok?ver=n"
+EDAD_PTGAS <- T3 %>% 
+  select(-1) %>%
+  gt(auto_align = FALSE) %>%
+  tab_header(
+    title = md(paste("**Tabla 2: EDAD MEDIA y modal del personal PTGAS al servicio de la UCM según SEXO (", ANOFIN, ")**")),
+    subtitle = html(
+      web_image(
+        url = img,
+        height = px(50)
+      ))
+    ) %>%
+  cols_label(
+    T3.Sexo = md("**Sexo**"),
+    T3.Edad = md("**Edad media**"),
+    T3.Moda = md("**Edad modal**")
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = T3.Sexo) 
+  )
+EDAD_PTGAS
+
+#gtsave(EDAD_PTGAS, file = "Tablas/2_TABLA_EDAD_PTGAS_2024.html") #html
+#write_xlsx(as.data.frame(EDAD_PTGAS), path = "Tablas/2_TABLA_EDAD_PTGAS_2024.XLSX") #xlsx
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Grafico ANOFIN
+g8PTGASEdad <- PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>%  
+  filter(Ano==ANOFIN) %>% 
+  ggplot(aes(x=Detalle.Edad,fill=as.factor(Sexo))) +
+  # geom_density_ridges(aes(y=as.factor(Sexo)),col=NA,alpha=0.4)+ 
+  geom_density(col=NA,alpha=0.6)+
+  geom_vline(xintercept=modaH, col="#D8B70A", lwd=2)+
+  geom_vline(xintercept=modaM, col="#02401B", lwd=2)+
+  scale_fill_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  #scale_color_manual(values=wes_palette(n=2, name="Moonrise2"))+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+g8PTGASEdad <- g8PTGASEdad +
+  labs( title=paste("Gráfico 5: Comparación de la distribución de la EDAD MEDIA del personal PTGAS de la UCM según SEXO (", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="densidad",
+        caption = "Edad sobre número de personas distintas")
+g8PTGASEdad
+
+#ggsave(plot=g8PTGASEdad, file="2_FIGURA_COMPARACION_PTGAS_EDAD_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+
+# 3. EVOLUCIÓN DEL PERSONAL TOTAL AL SERVICIO DE LA UCM POR CATEGORÍA
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+TPTGAS2 <- PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  group_by(Ano,Grupo_PTGAS) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(concentracion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>% 
+  ungroup()
+TPTGAS2$TotPart<-percent(1,0.01)
+
+# TABLA NUMERO
+img <- "https://www.ucm.es/unidaddeigualdad/file/logo-observatorio-pq2ok?ver=n"
+EVOLUCION_PTGAS_CATEGORIA <- TPTGAS2 %>% 
+  select(-c(concentracion,TotPart)) %>%
+  pivot_wider(names_from = Grupo_PTGAS, values_from = c(N)) %>%
+  gt(auto_align = FALSE) %>%
+  tab_header(
+    title = md(paste("**Tabla 3: Evolución del PTGAS de la UCM por CATEGORÍA (2009-",ANOFIN,")**")),
+    subtitle = html(
+      web_image(
+        url = img,
+        height = px(50)
+      ))
+    ) %>%
+  cols_label(
+    Ano = md("**Año**"),
+    TOTAL_PERSONAS = md("**Total**"),
+    `Funcionario de Carrera` = md("**Personal Funcionario de Carrera**"), 
+    `Funcionario no permanente` = md("**Personal Funcionario no permanente**"),
+    `Laboral no permanente` = md("**Personal Laboral no permanente**"),
+    `Laboral permanente` = md("**Personal Laboral permanente**"),
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = Ano) 
+  )
+EVOLUCION_PTGAS_CATEGORIA
+
+#gtsave(EVOLUCION_PTGAS_CATEGORIA, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_CATEGORIA_2024.html") #html
+#write_xlsx(as.data.frame(EVOLUCION_PTGAS_CATEGORIA), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_CATEGORIA_2024.xlsx") #xlsx
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# TABLA Participacion
+img <- "https://www.ucm.es/unidaddeigualdad/file/logo-observatorio-pq2ok?ver=n"
+EVOLUCION_PTGAS_CATEGORIA_PCT <- TPTGAS2 %>% 
+  select(-c(TOTAL_PERSONAS,N)) %>%
+  pivot_wider(names_from = Grupo_PTGAS, values_from = c(concentracion)) %>%
+  gt(auto_align = FALSE) %>%
+  tab_header(
+    title = md(paste("**Tabla 4: Evolución de la Participación del PTGAS por CATEGORÍA (2009-",ANOFIN,")**")),
+    subtitle = html(
+      web_image(
+        url = img,
+        height = px(50)
+      ))
+    ) %>%
+  cols_label(
+    Ano = md("**Año**"),
+    TotPart = md("**Total**"),
+    `Funcionario de Carrera` = md("**Personal Funcionario de Carrera**"), 
+    `Funcionario no permanente` = md("**Personal Funcionario no permanente**"),
+    `Laboral no permanente` = md("**Personal Laboral no permanente**"),
+    `Laboral permanente` = md("**Personal Laboral permanente**"),
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = Ano) 
+  )
+EVOLUCION_PTGAS_CATEGORIA_PCT
+
+#gtsave(EVOLUCION_PTGAS_CATEGORIA_PCT, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_CATEGORIA_PCT_2024.html") #html
+#write_xlsx(as.data.frame(EVOLUCION_PTGAS_CATEGORIA_PCT), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_CATEGORIA_PCT_2024.xlsx") #xlsx
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+PERSONAL_TOTR2<-PERSONAL_TOTR %>% 
+  mutate(Grupo_PTGAS=ifelse(Grupo_PTGAS=='Funcionario de Carrera','Personal Funcionario de Carrera',Grupo_PTGAS),
+         Grupo_PTGAS=ifelse(Grupo_PTGAS=='Laboral permanente','Personal Laboral permanente',Grupo_PTGAS),
+         Grupo_PTGAS=ifelse(Grupo_PTGAS=='Laboral no permanente','Personal Laboral no permanente',Grupo_PTGAS),
+         Grupo_PTGAS=ifelse(Grupo_PTGAS=='Funcionario no permanente','Personal Funcionario no permanente',Grupo_PTGAS))
+
+# Grafico ANOFIN
+T2PTGAS <- PERSONAL_TOTR2  %>% 
+  filter(Ano==ANOFIN) %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>%  
+  group_by(Ano,Grupo_PTGAS) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>%
+  mutate(Participacion_num=N/sum(N, na.rm=TRUE)*100) %>% 
+  ungroup()
+g4P <- T2PTGAS %>%
+  ggplot(aes(y=Participacion_num,x=reorder(Grupo_PTGAS,Participacion_num),color=as.factor(Grupo_PTGAS),fill=as.factor(Grupo_PTGAS)))+
+  geom_col()+
+  geom_text(aes(y=Participacion_num+1.5,label=Participacion), col="black", vjust = 0.5)+
+  facet_wrap(vars(Ano),nrow = 1)+
+  coord_flip()+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+g4P <- g4P +
+  labs( title=paste("Gráfico 6: Comparación de la Participación del PTGAS de la UCM por CATEGORÍA (", ANOFIN, ")"), 
+        #subtitle=,
+        y="Participación",
+        x="Categorias",
+        caption = "% sobre número de personas distintas")
+
+g4P
+
+#ggsave(plot=g4P, file="3_FIGURA_COMPARACION_PTGAS_PARTICIPACION_CATEGORIA_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+<div id="tabla-contenedor-1">
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Tabla evolución por sexo y categoria
+T2 <- PERSONAL_TOTR  %>% 
+  filter(Colectivo.SIDI %in% c("PAS")) %>%
+  #filter(Ano<2022) %>%
+  group_by(Ano,Grupo_PTGAS,Sexo) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>%
+  mutate(Participacion_num=N/sum(N, na.rm=TRUE)*100) %>% 
+  ungroup()
+
+# Tabla
+tabla1<-T2 %>% 
+  select(c(Ano,Grupo_PTGAS,Sexo,N)) %>% 
+  pivot_wider(names_from = Sexo,values_from = N) %>% 
+  select(2,1,3,4) %>% 
+  arrange(Grupo_PTGAS)
+
+# Filtrar datos para cada categoría
+Funcionario_carrera <- tabla1 %>% filter(Grupo_PTGAS == "Funcionario de Carrera")
+Funcionario_no_permanente <- tabla1 %>% filter(Grupo_PTGAS == "Funcionario no permanente")
+Laboral_no_permanente <- tabla1 %>% filter(Grupo_PTGAS == "Laboral no permanente")
+Laboral_permanente <- tabla1 %>% filter(Grupo_PTGAS == "Laboral permanente")
+
+# Definir la función para crear la tabla con el encabezado
+crear_tabla <- function(data, titulo) {
+  img <- "https://www.ucm.es/unidaddeigualdad/file/logo-observatorio-pq2ok?ver=n"
+  a <- paste("Tabla 5:", titulo)
+  data %>%
+    select(-1) %>%
+    gt(auto_align = FALSE) %>%
+    tab_header(
+      title = md(a),
+      subtitle = html(
+        web_image(
+          url = img,
+          height = px(50)
+        ))
+    )  %>%
+  cols_label(
+    Ano = md("**Año**"),
+    Hombre = md("**Número Hombres**"),
+    Mujer = md("**Número Mujeres**")
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Hombre), 
+      rows = Hombre < Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Hombre), 
+      rows = Hombre >= Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Mujer), 
+      rows = Hombre >= Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Mujer), 
+      rows = Hombre <= Mujer # Modificar este numero
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = Ano) 
+  ) %>%
+  tab_footnote(
+    footnote = "El color verde indica el Sexo con mayor frecuencia",
+    locations = cells_column_labels(columns = everything())
+  ) %>%
+  tab_footnote(
+    footnote = "El color rojo indica el Sexo con menor frecuencia",
+    locations = cells_column_labels(columns = everything())
+  )
+}
+
+# Crear las tablas independientes
+tabla_Funcionario_carrera <- crear_tabla(Funcionario_carrera, paste("Evolución del PTGAS de la UCM - Personal Funcionario de Carrera según Sexo (2009-",ANOFIN,")"))
+tabla_Funcionario_no_permanente <- crear_tabla(Funcionario_no_permanente, paste("Evolución del PTGAS de la UCM - Personal Funcionario no permanente según Sexo (2009-",ANOFIN,")"))
+tabla_Laboral_no_permanente <- crear_tabla(Laboral_no_permanente, paste("Evolución del PTGAS de la UCM - Personal Laboral no permanente según Sexo (2009-",ANOFIN,")"))
+tabla_Laboral_permanente <- crear_tabla(Laboral_permanente, paste("Evolución del PTGAS de la UCM - Personal Laboral permanente según Sexo (2009-",ANOFIN,")"))
+
+# Mostrar las tablas
+tabla_Funcionario_carrera
+tabla_Funcionario_no_permanente
+tabla_Laboral_no_permanente
+tabla_Laboral_permanente
+
+#gtsave(tabla_Funcionario_carrera, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO CARRERA_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Funcionario_carrera), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO CARRERA_2024.xlsx") #xlsx
+
+#gtsave(tabla_Funcionario_no_permanente, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO NO PERM_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Funcionario_no_permanente), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO NO PERM_2024.xlsx") #xlsx
+
+#gtsave(tabla_Laboral_no_permanente, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL NO PERM_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Laboral_no_permanente), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL NO PERM_2024.xlsx") #xlsx
+
+#gtsave(tabla_Laboral_permanente, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL PERM_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Laboral_permanente), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL PERM_2024.xlsx") #xlsx
+```
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tablas1 = document.querySelectorAll('#tabla-contenedor-1 table');
+    var tablaActual1 = 0;
+    
+    for (var i = 1; i < tablas1.length; i++) {
+      tablas1[i].style.display = 'none';
+    }
+
+    function mostrarSiguienteTabla1() {
+      if (tablaActual1 < tablas1.length - 1) {
+        tablas1[tablaActual1].style.display = 'none';
+        tablaActual1++;
+        tablas1[tablaActual1].style.display = 'table';
+      }
+    }
+
+    function mostrarTablaAnterior1() {
+      if (tablaActual1 > 0) {
+        tablas1[tablaActual1].style.display = 'none';
+        tablaActual1--;
+        tablas1[tablaActual1].style.display = 'table';
+      }
+    }
+
+    var botonSiguiente1 = document.createElement('button');
+    botonSiguiente1.textContent = 'Siguiente Tabla';
+    botonSiguiente1.onclick = mostrarSiguienteTabla1;
+
+    var botonAnterior1 = document.createElement('button');
+    botonAnterior1.textContent = 'Anterior Tabla';
+    botonAnterior1.onclick = mostrarTablaAnterior1;
+
+    var contenedor1 = document.getElementById('tabla-contenedor-1');
+    contenedor1.style.textAlign = 'center'; // Centrar horizontalmente
+    contenedor1.appendChild(botonAnterior1);
+    contenedor1.appendChild(botonSiguiente1);
+  });
+  </script>
+</div>
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Grafico numero por sexo
+T2 <- PERSONAL_TOTR2  %>% 
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>%  
+  #filter(Ano<2022) %>%
+  group_by(Ano,Grupo_PTGAS,Sexo) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>%
+  mutate(Participacion_num=N/sum(N, na.rm=TRUE)*100) %>% 
+  ungroup()
+g5P <- T2 %>%
+  filter(Grupo_PTGAS!="DESCONOCIDO") %>% 
+  ggplot(aes(y=N,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line(lwd=1.5)+
+  geom_point(size=2.5)+
+  scale_fill_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  #  geom_hline(yintercept = 50, col="Darkorchid4")+
+  #  geom_hline(yintercept = 40, col="Darkorchid1",lty=3)+
+  #  geom_hline(yintercept = 60, col="Darkorchid1",lty=3)+
+  facet_wrap(vars(Grupo_PTGAS),nrow = 2)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+g5P <- g5P +
+  labs( title=paste("Gráfico 7: Evolución del PTGAS de la UCM por CATEGORÍA según SEXO (2009-", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="Número de personas",
+        caption = "Porcentaje sobre número de personas distintas")
+g5P
+
+#ggsave(plot=g5P, file="3_FIGURA_EVOLUCION_PTGAS_CATEGORIA_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+<div id="tabla-contenedor-2">
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Tabla
+tabla2<-T2 %>% 
+  select(c(Ano,Grupo_PTGAS,Sexo,Participacion)) %>% 
+  pivot_wider(names_from = Sexo,values_from = Participacion) %>% 
+  select(2,1,3,4) %>% 
+  arrange(Grupo_PTGAS)
+
+# Filtrar datos para cada categoría
+Funcionario_carrera <- tabla2 %>% filter(Grupo_PTGAS == "Personal Funcionario de Carrera")
+Funcionario_no_permanente <- tabla2 %>% filter(Grupo_PTGAS == "Personal Funcionario no permanente")
+Laboral_no_permanente <- tabla2 %>% filter(Grupo_PTGAS == "Personal Laboral no permanente")
+Laboral_permanente <- tabla2 %>% filter(Grupo_PTGAS == "Personal Laboral permanente")
+
+# Definir la función para crear la tabla con el encabezado
+crear_tabla <- function(data, titulo) {
+  img <- "https://www.ucm.es/unidaddeigualdad/file/logo-observatorio-pq2ok?ver=n"
+  a <- paste("Tabla 6:", titulo)
+  data %>%
+    select(-1) %>%
+    gt(auto_align = FALSE) %>%
+    tab_header(
+      title = md(a),
+      subtitle = html(
+        web_image(
+          url = img,
+          height = px(50)
+        ))
+    )  %>%
+  cols_label(
+    Ano = md("**Año**"),
+    Hombre = md("**Número Hombres**"),
+    Mujer = md("**Número Mujeres**")
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Hombre), 
+      rows = Hombre < Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Hombre), 
+      rows = Hombre >= Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Mujer), 
+      rows = Hombre >= Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(Mujer), 
+      rows = Hombre <= Mujer # Modificar este numero
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = Ano) 
+  ) %>%
+  tab_footnote(
+    footnote = "El color verde indica el Sexo con mayor porcentaje",
+    locations = cells_column_labels(columns = everything())
+  ) %>%
+  tab_footnote(
+    footnote = "El color rojo indica el Sexo con menor porcentaje",
+    locations = cells_column_labels(columns = everything())
+  )
+}
+
+# Crear las tablas independientes
+tabla_Funcionario_carrera <- crear_tabla(Funcionario_carrera, paste("Evolución de la participación del PTGAS de la UCM - Personal Funcionario de Carrera según Sexo (2009-",ANOFIN,")"))
+tabla_Funcionario_no_permanente <- crear_tabla(Funcionario_no_permanente, paste("Evolución de la participación del PTGAS de la UCM - Personal Funcionario no permanente según Sexo (2009-",ANOFIN,")"))
+tabla_Laboral_no_permanente <- crear_tabla(Laboral_no_permanente, paste("Evolución de la participación del PTGAS de la UCM - Personal Laboral no permanente según Sexo (2009-",ANOFIN,")"))
+tabla_Laboral_permanente <- crear_tabla(Laboral_permanente, paste("Evolución de la participación del PTGAS de la UCM - Personal Laboral permanente según Sexo (2009-",ANOFIN,")"))
+
+# Mostrar las tablas
+tabla_Funcionario_carrera
+tabla_Funcionario_no_permanente
+tabla_Laboral_no_permanente
+tabla_Laboral_permanente
+
+#gtsave(tabla_Funcionario_carrera, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO CARRERA_PCT_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Funcionario_carrera), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO CARRERA_PCT_2024.xlsx") #xlsx
+
+#gtsave(tabla_Funcionario_no_permanente, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO NO PERM_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Funcionario_no_permanente), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_FUNCIONARIO NO PERM_PCT_2024.xlsx") #xlsx
+
+#gtsave(tabla_Laboral_no_permanente, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL NO PERM_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Laboral_no_permanente), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL NO PERM_PCT_2024.xlsx") #xlsx
+
+#gtsave(tabla_Laboral_permanente, file = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL PERM_2024.html") #html
+#write_xlsx(as.data.frame(tabla_Laboral_permanente), path = "Tablas/3_TABLA_EVOLUCION_PTGAS_LABORAL PERM_PCT_2024.xlsx") #xlsx
+```
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tablas2 = document.querySelectorAll('#tabla-contenedor-2 table');
+    var tablaActual2 = 0;
+    
+    for (var i = 1; i < tablas2.length; i++) {
+      tablas2[i].style.display = 'none';
+    }
+
+    function mostrarSiguienteTabla2() {
+      if (tablaActual2 < tablas2.length - 1) {
+        tablas2[tablaActual2].style.display = 'none';
+        tablaActual2++;
+        tablas2[tablaActual2].style.display = 'table';
+      }
+    }
+
+    function mostrarTablaAnterior2() {
+      if (tablaActual2 > 0) {
+        tablas2[tablaActual2].style.display = 'none';
+        tablaActual2--;
+        tablas2[tablaActual2].style.display = 'table';
+      }
+    }
+
+    var botonSiguiente2 = document.createElement('button');
+    botonSiguiente2.textContent = 'Siguiente Tabla';
+    botonSiguiente2.onclick = mostrarSiguienteTabla2;
+
+    var botonAnterior2 = document.createElement('button');
+    botonAnterior2.textContent = 'Anterior Tabla';
+    botonAnterior2.onclick = mostrarTablaAnterior2;
+
+    var contenedor2 = document.getElementById('tabla-contenedor-2');
+    contenedor2.style.textAlign = 'center'; // Centrar horizontalmente
+    contenedor2.appendChild(botonAnterior2);
+    contenedor2.appendChild(botonSiguiente2);
+  });
+</script>
+</div>
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Grafico participacion sexo
+TPTGAS3 <- PERSONAL_TOTR2  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  group_by(Ano,Grupo_PTGAS,Sexo) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>% 
+  mutate(Participacion_num=(N/sum(N, na.rm=TRUE))*100) %>% 
+  ungroup()
+TPTGAS3.1 <- TPTGAS3 %>%
+  select(-Grupo_PTGAS) %>% 
+  group_by(Ano,Sexo) %>% 
+  summarise(N=sum(N, na.rm=TRUE)) %>%
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>%
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>% 
+  mutate(Participacion_num=(N/sum(N, na.rm=TRUE))*100) %>% 
+  ungroup() %>% 
+  mutate (Grupo_PTGAS="Total PTGAS") 
+TPTGAS3.2 <- rbind.data.frame(TPTGAS3,TPTGAS3.1)
+gPTGAS3 <- TPTGAS3.2 %>%
+  filter(Grupo_PTGAS!="Total PTGAS") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line(lwd=1.5)+
+  geom_point(size=2.5)+
+  scale_fill_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  geom_hline(yintercept = 50, col="Darkorchid4")+
+  geom_hline(yintercept = 40, col="Darkorchid1",lty=3)+
+  geom_hline(yintercept = 60, col="Darkorchid1",lty=3)+
+  facet_wrap(vars(Grupo_PTGAS),ncol = 5)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+gPTGAS3 <- gPTGAS3 +
+  labs( title=paste("Gráfico 8: Evolución de la Participación del PTGAS de la UCM por CATEGORÍA según SEXO (2009-", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+
+gPTGAS3
+
+#ggsave(plot=gPTGAS3, file="3_FIGURA_EVOLUCION_PTGAS_PARTICIPACION_CATEGORIA_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Histograma edad media ANOFIN
+g14PTGAS <- PERSONAL_TOTR2  %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>% 
+  ggplot(aes(x=Detalle.Edad,y=reorder(Grupo_PTGAS, Detalle.Edad))) +
+  geom_density_ridges(aes(fill=as.factor(Sexo)),col=NA,alpha=0.4)+ 
+  scale_fill_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  facet_wrap(vars(Ano))+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+g14PTGAS <- g14PTGAS +
+  labs( title=paste("Gráfico 9: Comparación de la distribución de la EDAD MEDIA 
+        del personal PTGAS de la UCM por CATEGORÍA según SEXO (", ANOFIN, ")"),
+        #subtitle=,
+        x="Años",
+        y="densidad",
+        caption = "Edad sobre número de personas distintas")
+g14PTGAS
+
+#ggsave(plot=g14PTGAS, file="3_FIGURA_COMPARACION_DIST_PTGAS_EDAD_CATEGORIA_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Edad media por sexo
+g14PTGAS_3 <- PERSONAL_TOTR2  %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>% 
+  group_by(Sexo,Grupo_PTGAS) %>% 
+  summarise(EdadMedia=round(mean(Detalle.Edad, na.rm=TRUE),1),
+            sdEdad=sd(Detalle.Edad, na.rm=TRUE)/(n())^0.5) %>% 
+  ungroup() %>% 
+  ggplot(aes(y=EdadMedia,x=reorder(Grupo_PTGAS, EdadMedia))) +
+  geom_col(aes(fill=as.factor(Sexo)),col=NA,alpha=1,position = "dodge2" )+
+  geom_text(aes(y=EdadMedia+4.5,label=EdadMedia, col=as.factor(Sexo)),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_errorbar(aes(ymax = EdadMedia + 1.96*sdEdad, ymin =EdadMedia - 1.96*sdEdad),position = position_dodge2(width =1, padding = 1), alpha=0.4)+
+  scale_fill_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=2, name="Cavalcanti1"))+
+  coord_flip() +
+  #  facet_wrap(vars(Ano))+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+g14PTGAS_3 <- g14PTGAS_3 +
+  labs( title=paste("Gráfico 10: EDAD MEDIA del personal PTGAS de la UCM por CATEGORÍA según SEXO (", ANOFIN, ")"),
+        #subtitle=,
+        x="Categoría",
+        y="Edad Media",
+        caption = "Edad sobre número de personas distintas")
+g14PTGAS_3
+
+#ggsave(plot=g14PTGAS_3, file="3_FIGURA_COMPARACION_PTGAS_EDAD_CATEGORIA_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+# 4. EVOLUCIÓN DEL PERSONAL TOTAL AL SERVICIO DE LA UCM POR CENTRO
+
+<br>
+
+<div id="tabla-contenedor-3">
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+TPTGAS3_centros <- PERSONAL_TOTR  %>%
+  filter(Colectivo.SIDI=="PAS") %>% 
+  filter(Grupo=="PAS Funcionario" | Grupo=="PAS Laboral") %>% 
+  filter(Tipo.Empleado.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  group_by(Ano,Grupo_PTGAS,Facultad.SIDI,Sexo) %>% 
+  summarise(N=n()) %>% 
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>% 
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>% 
+  mutate(Participacion_num=(N/sum(N, na.rm=TRUE))*100) %>% 
+  ungroup()
+TPTGAS3.1_centros <- TPTGAS3_centros %>%
+  select(-Grupo_PTGAS) %>% 
+  group_by(Ano,Facultad.SIDI,Sexo) %>% 
+  summarise(N=sum(N, na.rm=TRUE)) %>%
+  mutate(TOTAL_PERSONAS=sum(N, na.rm=TRUE)) %>%
+  mutate(Participacion=percent(N/sum(N, na.rm=TRUE),accuracy = 0.01)) %>% 
+  mutate(Participacion_num=(N/sum(N, na.rm=TRUE))*100) %>% 
+  ungroup() %>% 
+  mutate (Grupo_PTGAS="Total PAS") 
+TPTGAS3.2_centros <- rbind.data.frame(TPTGAS3_centros,TPTGAS3.1_centros)
+
+TPTGAS3.1_centrosA<-TPTGAS3.1_centros %>% 
+  select(-c(7,8)) %>% 
+  pivot_wider(names_from = c(Sexo), values_from = c(N,Participacion))
+TPTGAS3.1_centrosA<-data.frame(TPTGAS3.1_centrosA$Facultad.SIDI,TPTGAS3.1_centrosA$Ano,TPTGAS3.1_centrosA$TOTAL_PERSONAS,
+                             TPTGAS3.1_centrosA$N_Hombre,TPTGAS3.1_centrosA$N_Mujer,
+                             TPTGAS3.1_centrosA$Participacion_Hombre,TPTGAS3.1_centrosA$Participacion_Mujer)
+
+
+
+tabla3 <- TPTGAS3.1_centrosA %>% 
+  filter(TPTGAS3.1_centrosA.Facultad.SIDI!="DESCONOCIDO") %>%
+  arrange(TPTGAS3.1_centrosA.Facultad.SIDI, TPTGAS3.1_centrosA.Ano) 
+
+# Filtrar datos para cada centro
+BELLAS_ARTES <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. BELLAS ARTES")
+CIENCIAS_BIOLOGICAS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS BIOLOGICAS")
+CIENCIAS_DOCUMENTACION <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS DE LA DOCUMENTACION")
+CIENCIAS_INFORMACION <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS DE LA INFORMACION")
+CIENCIAS_ECONOMICAS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS ECONOMICAS Y EMPRESARIALES")
+CIENCIAS_FISICAS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS FISICAS")
+CIENCIAS_GEOLOGICAS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS GEOLOGICAS")
+CIENCIAS_MATEMATICAS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS MATEMATICAS")
+CIENCIAS_POLITICAS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS POLITICAS Y SOCIOLOGIA")
+CIENCIAS_QUIMICAS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. CIENCIAS QUIMICAS")
+COMERCIO_TURISMO <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. COMERCIO Y TURISMO")
+DERECHO <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. DERECHO")
+EDUCACION <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. EDUCACION-CENTRO FORMACION PROFESOR")
+ENFERMERIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. ENFERMERIA, FISIOTERAPIA Y PODOLOGIA")
+ESTUDIOS_ESTADISTICOS <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. ESTUDIOS ESTADISTICOS")
+FARMACIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. FARMACIA")
+FILOLOGIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. FILOLOGIA")
+FILOSOFIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. FILOSOFIA")
+GEOGRAFIA_HISTORIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. GEOGRAFIA E HISTORIA")
+INFORMATICA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. INFORMATICA")
+MEDICINA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. MEDICINA")
+ODONTOLOGIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. ODONTOLOGIA")
+OPTICA_OPTOMETRIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. OPTICA Y OPTOMETRIA")
+PSICOLOGIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. PSICOLOGIA")
+TRABAJO_SOCIAL <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. TRABAJO SOCIAL")
+VETERINARIA <- tabla3 %>% filter(TPTGAS3.1_centrosA.Facultad.SIDI == "F. VETERINARIA")
+
+# Definir la función para crear la tabla con el encabezado
+crear_tabla <- function(data, titulo) {
+  img <- "https://www.ucm.es/unidaddeigualdad/file/logo-observatorio-pq2ok?ver=n"
+  a <- paste("Tabla 7:", titulo)
+  data %>%
+    select(-1) %>%
+    gt(auto_align = FALSE) %>%
+    tab_header(
+      title = md(a),
+      subtitle = html(
+        web_image(
+          url = img,
+          height = px(50)
+        ))
+    ) %>%
+  tab_spanner(
+    label = md("**Personas**"),
+    columns = c(
+      TPTGAS3.1_centrosA.TOTAL_PERSONAS, TPTGAS3.1_centrosA.N_Hombre, TPTGAS3.1_centrosA.N_Mujer
+    )
+  ) %>%
+  tab_spanner(
+    label = md("**Participación %**"),
+    columns = c(
+      TPTGAS3.1_centrosA.Participacion_Hombre, TPTGAS3.1_centrosA.Participacion_Mujer
+    )
+  ) %>%
+  cols_label(
+    TPTGAS3.1_centrosA.Ano = md("**Año**"),
+    TPTGAS3.1_centrosA.TOTAL_PERSONAS = md("**Total**"),
+    TPTGAS3.1_centrosA.N_Hombre = md("**Hombre**"),
+    TPTGAS3.1_centrosA.N_Mujer = md("**Mujer**"), 
+    TPTGAS3.1_centrosA.Participacion_Hombre = md("**Hombre**"),
+    TPTGAS3.1_centrosA.Participacion_Mujer = md("**Mujer**")
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.N_Hombre), 
+      rows = TPTGAS3.1_centrosA.N_Hombre < TPTGAS3.1_centrosA.N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.N_Hombre), 
+      rows = TPTGAS3.1_centrosA.N_Hombre >= TPTGAS3.1_centrosA.N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.N_Mujer), 
+      rows = TPTGAS3.1_centrosA.N_Hombre > TPTGAS3.1_centrosA.N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.N_Mujer), 
+      rows = TPTGAS3.1_centrosA.N_Hombre <= TPTGAS3.1_centrosA.N_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.Participacion_Hombre), 
+      rows = TPTGAS3.1_centrosA.Participacion_Hombre < TPTGAS3.1_centrosA.Participacion_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.Participacion_Hombre), 
+      rows = TPTGAS3.1_centrosA.Participacion_Hombre >= TPTGAS3.1_centrosA.Participacion_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = rgb(1, 0.6, 0.6)),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.Participacion_Mujer), 
+      rows = TPTGAS3.1_centrosA.Participacion_Hombre > TPTGAS3.1_centrosA.Participacion_Mujer # Modificar este numero
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightgreen"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = c(TPTGAS3.1_centrosA.Participacion_Mujer), 
+      rows = TPTGAS3.1_centrosA.Participacion_Hombre <= TPTGAS3.1_centrosA.Participacion_Mujer # Modificar este numero
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold", align = "center")
+    ),
+    locations = cells_body(columns = TPTGAS3.1_centrosA.Ano) 
+  ) %>%
+  tab_footnote(
+    footnote = "El color verde indica el Sexo con mayor frecuencia o porcentaje",
+    locations = cells_column_labels(columns = everything())
+  ) %>%
+  tab_footnote(
+    footnote = "El color rojo indica el Sexo con menor frecuencia o porcentaje",
+    locations = cells_column_labels(columns = everything())
+  )
+}
+
+# Crear las tablas independientes
+tabla_BELLAS_ARTES <- crear_tabla(BELLAS_ARTES, paste("Evolución del PAS de la UCM por CENTRO - F. BELLAS ARTES (2009-",ANOFIN,")"))
+tabla_CIENCIAS_BIOLOGICAS <- crear_tabla(CIENCIAS_BIOLOGICAS, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS BIOLOGICAS (2009-",ANOFIN,")"))
+tabla_CIENCIAS_DOCUMENTACION <- crear_tabla(CIENCIAS_DOCUMENTACION, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS DE LA DOCUMENTACION (2009-",ANOFIN,")"))
+tabla_CIENCIAS_INFORMACION <- crear_tabla(CIENCIAS_INFORMACION, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS DE LA INFORMACION (2009-",ANOFIN,")"))
+tabla_CIENCIAS_ECONOMICAS <- crear_tabla(CIENCIAS_ECONOMICAS, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS ECONOMICAS Y EMPRESARIALES (2009-",ANOFIN,")"))
+tabla_CIENCIAS_FISICAS <- crear_tabla(CIENCIAS_FISICAS, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS FISICAS (2009-",ANOFIN,")"))
+tabla_CIENCIAS_GEOLOGICAS <- crear_tabla(CIENCIAS_GEOLOGICAS, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS GEOLOGICAS (2009-",ANOFIN,")"))
+tabla_CIENCIAS_MATEMATICAS <- crear_tabla(CIENCIAS_MATEMATICAS, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS MATEMATICAS (2009-",ANOFIN,")"))
+tabla_CIENCIAS_POLITICAS <- crear_tabla(CIENCIAS_POLITICAS, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS POLITICAS Y SOCIOLOGIA (2009-",ANOFIN,")"))
+tabla_CIENCIAS_QUIMICAS <- crear_tabla(CIENCIAS_QUIMICAS, paste("Evolución del PAS de la UCM por CENTRO - F. CIENCIAS QUIMICAS (2009-",ANOFIN,")"))
+tabla_COMERCIO_TURISMO <- crear_tabla(COMERCIO_TURISMO, paste("Evolución del PAS de la UCM por CENTRO - F. COMERCIO Y TURISMO (2009-",ANOFIN,")"))
+tabla_DERECHO <- crear_tabla(DERECHO, paste("Evolución del PAS de la UCM por CENTRO - F. DERECHO (2009-",ANOFIN,")"))
+tabla_EDUCACION_CENTRO <- crear_tabla(EDUCACION, paste("Evolución del PAS de la UCM por CENTRO - F. EDUCACION-CENTRO FORMACION PROFESOR (2009-",ANOFIN,")"))
+tabla_ENFERMERIA_FISIOTERAPIA <- crear_tabla(ENFERMERIA, paste("Evolución del PAS de la UCM por CENTRO - F. ENFERMERIA, FISIOTERAPIA Y PODOLOGIA (2009-",ANOFIN,")"))
+tabla_ESTUDIOS_ESTADISTICOS <- crear_tabla(ESTUDIOS_ESTADISTICOS, paste("Evolución del PAS de la UCM por CENTRO - F. ESTUDIOS ESTADISTICOS (2009-",ANOFIN,")"))
+tabla_FARMACIA <- crear_tabla(FARMACIA, paste("Evolución del PAS de la UCM por CENTRO - F. FARMACIA (2009-",ANOFIN,")"))
+tabla_FILOLOGIA <- crear_tabla(FILOLOGIA, paste("Evolución del PAS de la UCM por CENTRO - F. FILOLOGIA (2009-",ANOFIN,")"))
+tabla_FILOSOFIA <- crear_tabla(FILOSOFIA, paste("Evolución del PAS de la UCM por CENTRO - F. FILOSOFIA (2009-",ANOFIN,")"))
+tabla_GEOGRAFIA_HISTORIA <- crear_tabla(GEOGRAFIA_HISTORIA, paste("Evolución del PAS de la UCM por CENTRO - F. GEOGRAFIA E HISTORIA (2009-",ANOFIN,")"))
+tabla_INFORMATICA <- crear_tabla(INFORMATICA, paste("Evolución del PAS de la UCM por CENTRO - F. INFORMATICA (2009-",ANOFIN,")"))
+tabla_MEDICINA <- crear_tabla(MEDICINA, paste("Evolución del PAS de la UCM por CENTRO - F. MEDICINA (2009-",ANOFIN,")"))
+tabla_ODONTOLOGIA <- crear_tabla(ODONTOLOGIA, paste("Evolución del PAS de la UCM por CENTRO - F. ODONTOLOGIA (2009-",ANOFIN,")"))
+tabla_OPTICA_OPTOMETRIA <- crear_tabla(OPTICA_OPTOMETRIA, paste("Evolución del PAS de la UCM por CENTRO - F. OPTICA Y OPTOMETRIA (2009-",ANOFIN,")"))
+tabla_PSICOLOGIA <- crear_tabla(PSICOLOGIA, paste("Evolución del PAS de la UCM por CENTRO - F. PSICOLOGIA (2009-",ANOFIN,")"))
+tabla_TRABAJO_SOCIAL <- crear_tabla(TRABAJO_SOCIAL, paste("Evolución del PAS de la UCM por CENTRO - F. TRABAJO SOCIAL (2009-",ANOFIN,")"))
+tabla_VETERINARIA <- crear_tabla(VETERINARIA, paste("Evolución del PAS de la UCM por CENTRO - F. VETERINARIA (2009-",ANOFIN,")"))
+
+
+# Mostrar las tablas
+tabla_BELLAS_ARTES
+tabla_CIENCIAS_BIOLOGICAS
+tabla_CIENCIAS_DOCUMENTACION
+tabla_CIENCIAS_INFORMACION
+tabla_CIENCIAS_ECONOMICAS
+tabla_CIENCIAS_FISICAS
+tabla_CIENCIAS_GEOLOGICAS
+tabla_CIENCIAS_MATEMATICAS
+tabla_CIENCIAS_POLITICAS
+tabla_CIENCIAS_QUIMICAS
+tabla_COMERCIO_TURISMO
+tabla_DERECHO
+tabla_EDUCACION_CENTRO
+tabla_ENFERMERIA_FISIOTERAPIA
+tabla_ESTUDIOS_ESTADISTICOS
+tabla_FARMACIA
+tabla_FILOLOGIA
+tabla_FILOSOFIA
+tabla_GEOGRAFIA_HISTORIA
+tabla_INFORMATICA
+tabla_MEDICINA
+tabla_ODONTOLOGIA
+tabla_OPTICA_OPTOMETRIA
+tabla_PSICOLOGIA
+tabla_TRABAJO_SOCIAL
+tabla_VETERINARIA
+
+# 1. Bellas Artes
+#gtsave(tabla_BELLAS_ARTES, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_BELLAS_ARTES_2024.html")
+#write_xlsx(as.data.frame(tabla_BELLAS_ARTES), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_BELLAS_ARTES_2024.xlsx")
+
+# 2. Ciencias Biológicas
+#gtsave(tabla_CIENCIAS_BIOLOGICAS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_BIOLOGICAS_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_BIOLOGICAS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_BIOLOGICAS_2024.xlsx")
+
+# 3. Ciencias Documentación
+#gtsave(tabla_CIENCIAS_DOCUMENTACION, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_DOCUMENTACION_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_DOCUMENTACION), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_DOCUMENTACION_2024.xlsx")
+
+# 4. Ciencias Información
+#gtsave(tabla_CIENCIAS_INFORMACION, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_INFORMACION_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_INFORMACION), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_INFORMACION_2024.xlsx")
+
+# 5. Ciencias Económicas
+#gtsave(tabla_CIENCIAS_ECONOMICAS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_ECONOMICAS_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_ECONOMICAS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_ECONOMICAS_2024.xlsx")
+
+# 6. Ciencias Físicas
+#gtsave(tabla_CIENCIAS_FISICAS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_FISICAS_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_FISICAS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_FISICAS_2024.xlsx")
+
+# 7. Ciencias Geológicas
+#gtsave(tabla_CIENCIAS_GEOLOGICAS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_GEOLOGICAS_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_GEOLOGICAS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_GEOLOGICAS_2024.xlsx")
+
+# 8. Ciencias Matemáticas
+#gtsave(tabla_CIENCIAS_MATEMATICAS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_MATEMATICAS_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_MATEMATICAS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_MATEMATICAS_2024.xlsx")
+
+# 9. Ciencias Políticas
+#gtsave(tabla_CIENCIAS_POLITICAS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_POLITICAS_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_POLITICAS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_POLITICAS_2024.xlsx")
+
+# 10. Ciencias Químicas
+#gtsave(tabla_CIENCIAS_QUIMICAS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_QUIMICAS_2024.html")
+#write_xlsx(as.data.frame(tabla_CIENCIAS_QUIMICAS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_CIENCIAS_QUIMICAS_2024.xlsx")
+
+# 11. Comercio Turismo
+#gtsave(tabla_COMERCIO_TURISMO, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_COMERCIO_TURISMO_2024.html")
+#write_xlsx(as.data.frame(tabla_COMERCIO_TURISMO), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_COMERCIO_TURISMO_2024.xlsx")
+
+# 12. Derecho
+#gtsave(tabla_DERECHO, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_DERECHO_2024.html")
+#write_xlsx(as.data.frame(tabla_DERECHO), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_DERECHO_2024.xlsx")
+
+# 13. Educación Centro
+#gtsave(tabla_EDUCACION_CENTRO, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_EDUCACION_CENTRO_2024.html")
+#write_xlsx(as.data.frame(tabla_EDUCACION_CENTRO), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_EDUCACION_CENTRO_2024.xlsx")
+
+# 14. Enfermería Fisioterapia
+#gtsave(tabla_ENFERMERIA_FISIOTERAPIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_ENFERMERIA_FISIOTERAPIA_2024.html")
+#write_xlsx(as.data.frame(tabla_ENFERMERIA_FISIOTERAPIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_ENFERMERIA_FISIOTERAPIA_2024.xlsx")
+
+# 15. Estudios Estadísticos
+#gtsave(tabla_ESTUDIOS_ESTADISTICOS, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_ESTUDIOS_ESTADISTICOS_2024.html")
+#write_xlsx(as.data.frame(tabla_ESTUDIOS_ESTADISTICOS), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_ESTUDIOS_ESTADISTICOS_2024.xlsx")
+
+# 16. Farmacia
+#gtsave(tabla_FARMACIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_FARMACIA_2024.html")
+#write_xlsx(as.data.frame(tabla_FARMACIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_FARMACIA_2024.xlsx")
+
+# 17. Filología
+#gtsave(tabla_FILOLOGIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_FILOLOGIA_2024.html")
+#write_xlsx(as.data.frame(tabla_FILOLOGIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_FILOLOGIA_2024.xlsx")
+
+# 18. Filosofía
+#gtsave(tabla_FILOSOFIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_FILOSOFIA_2024.html")
+#write_xlsx(as.data.frame(tabla_FILOSOFIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_FILOSOFIA_2024.xlsx")
+
+# 19. Geografía Historia
+#gtsave(tabla_GEOGRAFIA_HISTORIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_GEOGRAFIA_HISTORIA_2024.html")
+#write_xlsx(as.data.frame(tabla_GEOGRAFIA_HISTORIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_GEOGRAFIA_HISTORIA_2024.xlsx")
+
+# 20. Informática
+#gtsave(tabla_INFORMATICA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_INFORMATICA_2024.html")
+#write_xlsx(as.data.frame(tabla_INFORMATICA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_INFORMATICA_2024.xlsx")
+
+# 21. Medicina
+#gtsave(tabla_MEDICINA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_MEDICINA_2024.html")
+#write_xlsx(as.data.frame(tabla_MEDICINA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_MEDICINA_2024.xlsx")
+
+# 22. Odontología
+#gtsave(tabla_ODONTOLOGIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_ODONTOLOGIA_2024.html")
+#write_xlsx(as.data.frame(tabla_ODONTOLOGIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_ODONTOLOGIA_2024.xlsx")
+
+# 23. Óptica Optometría
+#gtsave(tabla_OPTICA_OPTOMETRIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_OPTICA_OPTOMETRIA_2024.html")
+#write_xlsx(as.data.frame(tabla_OPTICA_OPTOMETRIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_OPTICA_OPTOMETRIA_2024.xlsx")
+
+# 24. Psicología
+#gtsave(tabla_PSICOLOGIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_PSICOLOGIA_2024.html")
+#write_xlsx(as.data.frame(tabla_PSICOLOGIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_PSICOLOGIA_2024.xlsx")
+
+# 25. Trabajo Social
+#gtsave(tabla_TRABAJO_SOCIAL, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_TRABAJO_SOCIAL_2024.html")
+#write_xlsx(as.data.frame(tabla_TRABAJO_SOCIAL), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_TRABAJO_SOCIAL_2024.xlsx")
+
+# 26. Veterinaria
+#gtsave(tabla_VETERINARIA, file = "Tablas/4_TABLA_EVOLUCION_PTGAS_VETERINARIA_2024.html")
+#write_xlsx(as.data.frame(tabla_VETERINARIA), path = "Tablas/4_TABLA_EVOLUCION_PTGAS_VETERINARIA_2024.xlsx")
+```
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var tablas3 = document.querySelectorAll('#tabla-contenedor-3 table');
+  var tablaActual3 = 0;
   
-</body>
-</html>
+  for (var i = 1; i < tablas3.length; i++) {
+    tablas3[i].style.display = 'none';
+  }
+
+  function mostrarSiguienteTabla3() {
+    if (tablaActual3 < tablas3.length - 1) {
+      tablas3[tablaActual3].style.display = 'none';
+      tablaActual3++;
+      tablas3[tablaActual3].style.display = 'table';
+    }
+  }
+
+  function mostrarTablaAnterior3() {
+    if (tablaActual3 > 0) {
+      tablas3[tablaActual3].style.display = 'none';
+      tablaActual3--;
+      tablas3[tablaActual3].style.display = 'table';
+    }
+  }
+
+  var botonSiguiente3 = document.createElement('button');
+  botonSiguiente3.textContent = 'Siguiente Tabla';
+  botonSiguiente3.onclick = mostrarSiguienteTabla3;
+
+  var botonAnterior3 = document.createElement('button');
+  botonAnterior3.textContent = 'Anterior Tabla';
+  botonAnterior3.onclick = mostrarTablaAnterior3;
+
+  var contenedor3 = document.getElementById('tabla-contenedor-3');
+  contenedor3.style.textAlign = 'center'; // Centrar horizontalmente
+  contenedor3.appendChild(botonAnterior3);
+  contenedor3.appendChild(botonSiguiente3);
+});
+</script>
+</div>
+
+<br>
+
+<div id="grafico-contenedor">
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Graficos
+a1<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. CIENCIAS BIOLOGICAS'|
+           Facultad.SIDI=='F. BELLAS ARTES'|
+           Facultad.SIDI=='F. CIENCIAS DE LA DOCUMENTACION') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje",
+       title=paste("Gráfico 11:  Evolución de la Participación del PTGAS de la UCM por CENTRO
+       según SEXO (2009-", ANOFIN, ")")) +
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+a2<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. CIENCIAS DE LA INFORMACION'|
+           Facultad.SIDI=='F. CIENCIAS ECONOMICAS Y EMPRESARIALES'|
+           Facultad.SIDI=='F. CIENCIAS FISICAS') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje")+
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+a3<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. CIENCIAS GEOLOGICAS'|
+           Facultad.SIDI=='F. CIENCIAS MATEMATICAS'|
+           Facultad.SIDI=='F. CIENCIAS POLITICAS Y SOCIOLOGIA') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje")+
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+a4<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. CIENCIAS QUIMICAS'|
+           Facultad.SIDI=='F. COMERCIO Y TURISMO'|
+           Facultad.SIDI=='F. DERECHO') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje")+
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+a5<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. EDUCACION-CENTRO FORMACION PROFESOR'|
+           Facultad.SIDI=='F. ENFERMERIA, FISIOTERAPIA Y PODOLOGIA'|
+           Facultad.SIDI=='F. ESTUDIOS ESTADISTICOS') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje")+
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+a6<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. FARMACIA'|
+           Facultad.SIDI=='F. FILOLOGIA'|
+           Facultad.SIDI=='F. FILOSOFIA') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje")+
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+a7<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. GEOGRAFIA E HISTORIA'|
+           Facultad.SIDI=='F. INFORMATICA'|
+           Facultad.SIDI=='F. MEDICINA'|
+           Facultad.SIDI=='F. ODONTOLOGIA') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje")+
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+a8<-TPTGAS3.1_centros %>%
+  filter(Facultad.SIDI=='F. OPTICA Y OPTOMETRIA'|
+           Facultad.SIDI=='F. PSICOLOGIA'|
+           Facultad.SIDI=='F. TRABAJO SOCIAL'|
+           Facultad.SIDI=='F. VETERINARIA') %>% 
+  filter(Facultad.SIDI!="DESCONOCIDO") %>% 
+  #filter(Ano<2022) %>%
+  ggplot(aes(y=Participacion_num,x=Ano,color=Sexo,fill=Sexo))+
+  geom_line()+
+  geom_hline(yintercept = 60,linetype='dashed')+
+  geom_hline(yintercept = 40,linetype='dashed')+
+  geom_line(size=1) +
+  geom_point(color='black',size=0.5)+
+  scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  scale_color_manual(values=wes_palette(n=3, name="Cavalcanti1"))+
+  theme_minimal()+
+  labs(x = "Año",y = "Porcentaje")+
+  theme_bw()  +
+  facet_grid(cols=vars(Facultad.SIDI))
+
+a1
+a2
+a3
+a4
+a5
+a6
+a7
+a8
+
+#a1/a2
+#a3/a4
+#a5/a6
+#a7/a8
+
+#ggsave(plot=a1, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO1_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a2, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO2_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a3, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO3_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a4, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO4_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a5, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO5_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a6, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO6_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a7, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO7_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a8, file="4_FIGURA_EVOLUCION_PTGAS_GRUPO8_SEXO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var graficos = document.querySelectorAll('#grafico-contenedor img'); // Selecciona todos los gráficos en el contenedor
+    var graficoActual = 0;
+    
+    for (var i = 1; i < graficos.length; i++) {
+      graficos[i].style.display = 'none'; // Oculta todos los gráficos excepto el primero
+    }
+
+    function mostrarSiguienteGrafico() {
+      if (graficoActual < graficos.length - 1) {
+        graficos[graficoActual].style.display = 'none'; // Oculta el gráfico actual
+        graficoActual++;
+        graficos[graficoActual].style.display = 'inline-block'; // Muestra el siguiente gráfico
+      }
+    }
+
+    function mostrarGraficoAnterior() {
+      if (graficoActual > 0) {
+        graficos[graficoActual].style.display = 'none'; // Oculta el gráfico actual
+        graficoActual--;
+        graficos[graficoActual].style.display = 'inline-block'; // Muestra el gráfico anterior
+      }
+    }
+
+    var botonSiguiente = document.createElement('button');
+    botonSiguiente.textContent = 'Siguiente Gráfico';
+    botonSiguiente.onclick = mostrarSiguienteGrafico;
+
+    var botonAnterior = document.createElement('button');
+    botonAnterior.textContent = 'Anterior Gráfico';
+    botonAnterior.onclick = mostrarGraficoAnterior;
+
+    var contenedor = document.getElementById('grafico-contenedor');
+    contenedor.style.textAlign = 'center'; // Centra horizontalmente
+    contenedor.appendChild(botonAnterior);
+    contenedor.appendChild(botonSiguiente);
+  });
+</script>
+</div>
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Concentracion por centro
+aa <- TPTGAS3.1_centros %>% 
+  filter(Ano==ANOFIN) %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  select(Grupo_PTGAS,Facultad.SIDI,TOTAL_PERSONAS) %>% 
+  distinct(.keep_all = FALSE) %>%
+  mutate(Participacion=percent(TOTAL_PERSONAS/sum(TOTAL_PERSONAS),accuracy = 0.01)) %>% 
+  mutate(Participacion_num=(TOTAL_PERSONAS/sum(TOTAL_PERSONAS, na.rm=TRUE))*100)
+G1_centros <- aa %>%
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 1,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  coord_flip() +
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+G1_centros <- G1_centros +
+  labs( title=paste("Gráfico 12: Concentración de PTGAS de la UCM por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+G1_centros
+
+#ggsave(plot=G1_centros, file="4_FIGURA_CONCENTRACION_PTGAS_CENTRO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+<div id="grafico-contenedor-2">
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Grafico concentracion ANOFIN
+aa <- TPTGAS3.1_centros %>% 
+  filter(Ano==ANOFIN) %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  select(Grupo_PTGAS,Facultad.SIDI,TOTAL_PERSONAS) %>% 
+  distinct(.keep_all = FALSE) %>%
+  mutate(Participacion=percent(TOTAL_PERSONAS/sum(TOTAL_PERSONAS),accuracy = 0.01)) %>% 
+  mutate(Participacion_num=(TOTAL_PERSONAS/sum(TOTAL_PERSONAS, na.rm=TRUE))*100)
+
+aa <- TPTGAS3_centros %>% 
+  filter(Ano==ANOFIN) %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  select(Grupo_PTGAS,Facultad.SIDI,TOTAL_PERSONAS) %>%
+  distinct(.keep_all = FALSE) %>%
+  group_by(Grupo_PTGAS,Facultad.SIDI) %>%
+  summarise(N=sum(TOTAL_PERSONAS)) %>% 
+  mutate(Participacion=percent(N/sum(N),accuracy = 0.01)) %>% 
+  mutate(Participacion_num=(N/sum(N, na.rm=TRUE))*100) %>% 
+  ungroup()
+
+
+# Uno por cada categoria
+# bb es para poner el punto
+bb <- TPTGAS3.1_centros %>% 
+  filter(Ano==ANOFIN) %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  select(Grupo_PTGAS,Facultad.SIDI,TOTAL_PERSONAS) %>%
+  distinct(.keep_all = FALSE) %>%
+  group_by(Grupo_PTGAS,Facultad.SIDI) %>%
+  summarise(N=sum(TOTAL_PERSONAS)) %>% 
+  mutate(ParticipacionT=percent(N/sum(N),accuracy = 0.01)) %>% 
+  mutate(Participacion_numT=(N/sum(N, na.rm=TRUE))*100) %>% 
+  ungroup() 
+
+# laboral permanente
+a1<-  aa %>%
+  filter(Grupo_PTGAS=="Laboral permanente") %>% 
+  left_join(bb[, c(2,5)], by="Facultad.SIDI") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 0.5,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_point(aes(y=Participacion_numT), size=2)+  
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 1)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+a1 <- a1 +
+  labs( title=paste("Gráfico 13: Concentración de 'Personal Laboral permanente' por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "•: porcentaje del PTGAS total que están en esa facultad")
+
+# Funcionaario de crrera
+a2 <-  aa %>%
+  filter(Grupo_PTGAS=="Funcionario de Carrera") %>% 
+  left_join(bb[, c(2,5)], by="Facultad.SIDI") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 0.5,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_point(aes(y=Participacion_numT), size=2)+  
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 1)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+a2<- a2 +
+  labs( title=paste("Gráfico 14: Concentración de 'Personal Funcionario de Carrera' por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "•: porcentaje del PTGAS total que están en esa facultad")
+
+# Laboral no permanente
+a3<-  aa %>%
+  filter(Grupo_PTGAS=="Laboral no permanente") %>% 
+  left_join(bb[, c(2,5)], by="Facultad.SIDI") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 0.5,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_point(aes(y=Participacion_numT), size=2)+  
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 1)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+a3 <- a3 +
+  labs( title=paste("Gráfico 15: Concentración de 'Personal Laboral no permanente' por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "•: porcentaje del PTGAS total que están en esa facultad")
+
+# Funcionario no permanente
+a4 <-  aa %>%
+  filter(Grupo_PTGAS=="Funcionario no permanente") %>% 
+  left_join(bb[, c(2,5)], by="Facultad.SIDI") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 0.5,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_point(aes(y=Participacion_numT), size=2)+  
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 1)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+a4 <- a4 +
+  labs( title=paste("Gráfico 16: Concentración de 'Personal Funcionario no permanente' por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "•: porcentaje del PTGAS total que están en esa facultad")
+a1
+a2
+a3
+a4
+
+#ggsave(plot=a1, file="4_FIGURA_CONCENTRACION_PTGAS_Laboral permanente_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a2, file="4_FIGURA_CONCENTRACION_PTGAS_Funcionario de Carrera_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a3, file="4_FIGURA_CONCENTRACION_PTGAS_Laboral no permanente_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+#ggsave(plot=a4, file="4_FIGURA_CONCENTRACION_PTGAS_Funcionario no permanente_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var graficos2 = document.querySelectorAll('#grafico-contenedor-2 img'); // Selecciona todos los gráficos en el contenedor
+    var graficoActual2 = 0;
+    
+    for (var i = 1; i < graficos2.length; i++) {
+      graficos2[i].style.display = 'none'; // Oculta todos los gráficos excepto el primero
+    }
+
+    function mostrarSiguienteGrafico2() {
+      if (graficoActual2 < graficos2.length - 1) {
+        graficos2[graficoActual2].style.display = 'none'; // Oculta el gráfico actual
+        graficoActual2++;
+        graficos2[graficoActual2].style.display = 'inline-block'; // Muestra el siguiente gráfico
+      }
+    }
+
+    function mostrarGraficoAnterior2() {
+      if (graficoActual2 > 0) {
+        graficos2[graficoActual2].style.display = 'none'; // Oculta el gráfico actual
+        graficoActual2--;
+        graficos2[graficoActual2].style.display = 'inline-block'; // Muestra el gráfico anterior
+      }
+    }
+
+    var botonSiguiente2 = document.createElement('button');
+    botonSiguiente2.textContent = 'Siguiente Gráfico';
+    botonSiguiente2.onclick = mostrarSiguienteGrafico2;
+
+    var botonAnterior2 = document.createElement('button');
+    botonAnterior2.textContent = 'Anterior Gráfico';
+    botonAnterior2.onclick = mostrarGraficoAnterior2;
+
+    var contenedor2 = document.getElementById('grafico-contenedor-2');
+    contenedor2.style.textAlign = 'center'; // Centra horizontalmente
+    contenedor2.appendChild(botonAnterior2);
+    contenedor2.appendChild(botonSiguiente2);
+  });
+</script>
+</div>
+
+<br>
+
+## 4.1. Participación de la Mujer
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+##### Participacion de la mujer
+G3T_centros <- TPTGAS3.1_centros %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  filter(Sexo=="Mujer") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 4,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_hline(yintercept = 40, col="Darkorchid1",lty=3)+
+  geom_hline(yintercept = 60, col="Darkorchid1",lty=3)+
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 2)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+G3T_centros <- G3T_centros +
+  labs( title=paste("Gráfico 17: Participación de la Mujer PTGAS por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+G3T_centros
+
+#ggsave(plot=G3T_centros, file="4_1_FIGURA_PARTICIPACION_PTGAS_MUJER_CENTRO_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<br>
+
+<div id="grafico-contenedor-3">
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE,fig.align='center', fig.width=10}
+# Centros por categorías
+G3_centros <- TPTGAS3_centros %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  filter(Sexo=="Mujer") 
+
+
+# Centros por categorías 
+# 	Laboral permanente 
+G3_centros_cat <- TPTGAS3_centros %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Grupo_PTGAS=="Laboral permanente") %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  filter(Sexo=="Mujer") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 4,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_hline(yintercept = 40, col="Darkorchid1",lty=3, lwd=2)+
+  geom_hline(yintercept = 60, col="Darkorchid1",lty=3,lwd=2)+
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 2)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+G3_centros_cat <- G3_centros_cat +
+  labs( title=paste("Gráfico 18: Participación de la Mujer 'Personal Laboral permanente' de PTGAS por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+G3_centros_cat
+
+#ggsave(plot=G3_centros_cat, file="4_1_FIGURA_PARTICIPACION_PTGAS_MUJER_Laboral permanente_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+
+# Funcionaria de parrera
+G3_centros_tu <- TPTGAS3_centros %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Grupo_PTGAS=="Funcionario de Carrera") %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  filter(Sexo=="Mujer") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 4,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_hline(yintercept = 40, col="Darkorchid1",lty=3, lwd=2)+
+  geom_hline(yintercept = 60, col="Darkorchid1",lty=3,lwd=2)+
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 2)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+G3_centros_tu <- G3_centros_tu +
+  labs( title=paste("Gráfico 19: Participación de la Mujer 'Funcionaria de Carrera' por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+G3_centros_tu
+
+#ggsave(plot=G3_centros_tu, file="4_1_FIGURA_PARTICIPACION_PTGAS_MUJER_Funcionario de Carrera_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+
+# Laboral no permanente
+G3_centros_ct <- TPTGAS3_centros %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Grupo_PTGAS=="Laboral no permanente") %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  filter(Sexo=="Mujer") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 4,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_hline(yintercept = 40, col="Darkorchid1",lty=3, lwd=2)+
+  geom_hline(yintercept = 60, col="Darkorchid1",lty=3,lwd=2)+
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 2)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+G3_centros_ct <- G3_centros_ct +
+  labs( title=paste("Gráfico 20:Participación de la Mujer 'Personal Laboral no permanente'por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+G3_centros_ct
+
+#ggsave(plot=G3_centros_ct, file="4_1_FIGURA_PARTICIPACION_PTGAS_MUJER_Laboral no permanente_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+
+# Funcionaria no permanente
+G3_centros_cat <- TPTGAS3_centros %>%
+  filter(Ano==ANOFIN) %>%
+  filter(Grupo_PTGAS=="Funcionario no permanente") %>%
+  filter(Facultad.SIDI!="DESCONOCIDO") %>%
+  filter(Sexo=="Mujer") %>% 
+  ggplot(aes(y=Participacion_num, x=reorder(Facultad.SIDI,-Participacion_num))) + 
+  geom_col(col="Darkorchid4", fill="Darkorchid4")+
+  geom_text(aes(y=Participacion_num+ 4,label=Participacion),position = position_dodge2(0.9), vjust = 0.5)+
+  geom_hline(yintercept = 40, col="Darkorchid1",lty=3, lwd=2)+
+  geom_hline(yintercept = 60, col="Darkorchid1",lty=3,lwd=2)+
+  coord_flip() +
+  #  facet_wrap(vars(Categoria),nrow = 2)+
+  theme_minimal()+
+  theme(plot.title= element_text(colour="black", face="bold",size = rel(0.9)),
+        axis.line = element_line(size = 0.25, colour = "darkgrey", linetype = 1),
+        plot.caption = element_text(size = rel(0.6)),
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust=1, vjust = 0.5))
+G3_centros_cat <- G3_centros_cat +
+  labs( title=paste("Gráfico 21: Participación de la Mujer 'Funcionaria no permanente' de PTGAS por CENTRO (", ANOFIN, ")"),
+        #subtitle=,
+        x=NULL,
+        y="Porcentaje",
+        caption = "Porcentaje sobre el número de personas distintas")
+G3_centros_cat
+
+#ggsave(plot=G3_centros_cat, file="4_1_FIGURA_PARTICIPACION_PTGAS_MUJER_Funcionario no permanente_2024.jpeg",path = "Graficos", width =15,  height = 8, units = c("cm"), dpi=600)
+```
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var graficos3 = document.querySelectorAll('#grafico-contenedor-3 img'); // Selecciona todos los gráficos en el contenedor
+    var graficoActual3 = 0;
+    
+    for (var i = 1; i < graficos3.length; i++) {
+      graficos3[i].style.display = 'none'; // Oculta todos los gráficos excepto el primero
+    }
+
+    function mostrarSiguienteGrafico3() {
+      if (graficoActual3 < graficos3.length - 1) {
+        graficos3[graficoActual3].style.display = 'none'; // Oculta el gráfico actual
+        graficoActual3++;
+        graficos3[graficoActual3].style.display = 'inline-block'; // Muestra el siguiente gráfico
+      }
+    }
+
+    function mostrarGraficoAnterior3() {
+      if (graficoActual3 > 0) {
+        graficos3[graficoActual3].style.display = 'none'; // Oculta el gráfico actual
+        graficoActual3--;
+        graficos3[graficoActual3].style.display = 'inline-block'; // Muestra el gráfico anterior
+      }
+    }
+
+    var botonSiguiente3 = document.createElement('button');
+    botonSiguiente3.textContent = 'Siguiente Gráfico';
+    botonSiguiente3.onclick = mostrarSiguienteGrafico3;
+
+    var botonAnterior3 = document.createElement('button');
+    botonAnterior3.textContent = 'Anterior Gráfico';
+    botonAnterior3.onclick = mostrarGraficoAnterior3;
+
+    var contenedor3 = document.getElementById('grafico-contenedor-3');
+    contenedor3.style.textAlign = 'center'; // Centra horizontalmente
+    contenedor3.appendChild(botonAnterior3);
+    contenedor3.appendChild(botonSiguiente3);
+  });
+</script>
+</div>
